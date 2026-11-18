@@ -1,3 +1,7 @@
+# Mac junk
+__MACOSX/
+.DS_Store
+
 # Python
 __pycache__/
 *.py[cod]

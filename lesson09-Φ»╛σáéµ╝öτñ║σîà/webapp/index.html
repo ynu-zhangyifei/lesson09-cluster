@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>零售银行客户分群 · 分析看板</title>
+<style>
+  :root {
+    --bg: #f4f6fb; --card: #ffffff; --ink: #1a2340; --muted: #7a86a8;
+    --accent: #3b5bdb; --c0: #dd8452; --c1: #4c72b0; --c2: #55a868;
+    --radius: 14px; --shadow: 0 4px 24px rgba(26,35,64,.07);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "PingFang SC", "Songti SC", "Microsoft YaHei", sans-serif;
+         background: var(--bg); color: var(--ink); }
+  header { background: linear-gradient(120deg, #1a2340 0%, #2c3e70 100%);
+           color: #fff; padding: 28px 40px; }
+  header h1 { font-size: 24px; font-weight: 600; }
+  header p { color: #b9c4e8; font-size: 13px; margin-top: 6px; }
+  main { max-width: 1280px; margin: 0 auto; padding: 28px 32px 48px; }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 26px; }
+  .kpi { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+         padding: 20px 22px; }
+  .kpi .label { font-size: 12px; color: var(--muted); }
+  .kpi .value { font-size: 30px; font-weight: 700; margin-top: 6px; }
+  .kpi .sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .grid { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
+  .panel { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+           padding: 22px 24px; }
+  .panel h2 { font-size: 15px; font-weight: 600; margin-bottom: 14px; }
+  .panel img { width: 100%; border-radius: 8px; }
+  .seg { border-left: 4px solid; padding: 12px 14px; margin-bottom: 14px; background: #fafbfd;
+         border-radius: 0 10px 10px 0; }
+  .seg h3 { font-size: 14px; font-weight: 600; }
+  .seg .nums { font-size: 12px; color: var(--muted); margin: 6px 0; }
+  .seg p { font-size: 12.5px; line-height: 1.6; }
+  .seg.s0 { border-color: var(--c0); } .seg.s1 { border-color: var(--c1); }
+  .seg.s2 { border-color: var(--c2); }
+  footer { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; }
+  @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2,1fr); }
+                              .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>零售银行客户分群 · 分析看板</h1>
+  <p>k-均值聚类（k=3，标准化后） · 300 位客户 · random_state=42 · 第 9 次课演示</p>
+</header>
+<main>
+  <section class="kpis">
+    <div class="kpi"><div class="label">客户总数</div><div class="value">300</div>
+      <div class="sub">data/mall_customers_yuan.csv</div></div>
+    <div class="kpi"><div class="label">自然客群数 k</div><div class="value">3</div>
+      <div class="sub">肘部法拐点 k=3 · 轮廓系数 0.690</div></div>
+    <div class="kpi"><div class="label">簇内平方和 inertia</div><div class="value">62.79</div>
+      <div class="sub">标准化坐标 · 3 轮收敛</div></div>
+    <div class="kpi"><div class="label">特征</div><div class="value" style="font-size:20px;line-height:1.4">income / balance</div>
+      <div class="sub">StandardScaler 标准化后等权</div></div>
+  </section>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>聚类结果（原始坐标，余额单位：万元）</h2>
+      <img src="../outputs/04_compare_scale.png" alt="聚类对比图：原始坐标与标准化坐标">
+    </section>
+    <section class="panel">
+      <h2>三类客群画像与业务动作</h2>
+      <div class="seg s0">
+        <h3>低收低余的年轻客群 · 126 人（42%）</h3>
+        <div class="nums">均龄 21.5 岁 · 平均收入 6.1 万 · 平均余额 1.5 万</div>
+        <p>潜力客户。业务动作：开户礼、首卡渗透、校园/新人专享理财。</p>
+      </div>
+      <div class="seg s2">
+        <h3>中收中余的主力客群 · 124 人（41%）</h3>
+        <div class="nums">均龄 37.3 岁 · 平均收入 18.9 万 · 平均余额 12.5 万</div>
+        <p>银行基本盘。业务动作：交叉销售基金与理财、提升产品持有数。</p>
+      </div>
+      <div class="seg s1">
+        <h3>高收高余的富裕客群 · 50 人（17%）</h3>
+        <div class="nums">均龄 47.1 岁 · 平均收入 41.6 万 · 平均余额 48.4 万</div>
+        <p>高价值客户。业务动作：专属客户经理、私行服务、资产配置。</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel" style="margin-top:20px">
+    <h2>选 k 依据：肘部法 + 轮廓系数（两个证据不一致时，听业务的）</h2>
+    <img src="../outputs/05_choose_k.png" alt="肘部法与轮廓系数双折线">
+  </section>
+</main>
+<footer>纯前端演示页 · 无后端 · 图由 matplotlib 生成 · 本页由 AI 按草图生成（终点导向开发）</footer>
+</body>
+</html>

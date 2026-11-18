@@ -1,0 +1,31 @@
+%% 用例图：客户分群系统（图即代码教学素材 · Mermaid）
+%% 渲染：npx @mermaid-js/mermaid-cli -i usecase.mmd -o usecase.png
+flowchart LR
+    analyst([数据分析师])
+    manager([零售业务经理])
+
+    subgraph 客户分群系统
+        UC1(导入客户数据)
+        UC2(数据初检与可视化)
+        UC3(标准化特征)
+        UC4(选择簇数 k)
+        UC5(执行 k-均值聚类)
+        UC6(查看迭代过程)
+        UC7(生成分群报告)
+        UC8(制定营销策略)
+    end
+
+    analyst --> UC1
+    analyst --> UC2
+    analyst --> UC3
+    analyst --> UC4
+    analyst --> UC5
+    analyst --> UC6
+    analyst --> UC7
+    manager --> UC7
+    manager --> UC8
+
+    UC1 -.include.-> UC2
+    UC5 -.include.-> UC3
+    UC4 -.include.-> UC5
+    UC7 -.include.-> UC5
